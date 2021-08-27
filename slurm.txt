@@ -1,0 +1,13 @@
+#!/bin/bash -l
+#SBATCH --time=95:59:59
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=12
+#SBATCH --mem=1gb
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=majmu008@umn.edu
+#SBATCH -p small
+
+module purge
+module load intel/2018/release
+export OMP_NUM_THREADS=12
+/panfs/roc/groups/0/lysakrl/majmu008/alf2d/alf2d-20_1 > alf2d.out
