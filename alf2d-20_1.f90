@@ -73,9 +73,9 @@ open (13,file='B field_1.txt')
 open (14,file='fields1.txt',status='new')
 
 do i=1,46
-	read (10,fmt='(2g11.5)') height(i),etemp(i)
+	read (10,fmt='(2g13.5)') height(i),etemp(i)
 	read (12,fmt='(7g12.3)') nuo(i),nun2(i),nuo2(i),nuhe(i),nuar(i),nuh(i),nun(i) ! neutral densities (cm^-3)
-	read (11,fmt='(7g11.5)') edens(i),odens(i),hdens(i),hedens(i),o2dens(i),nodens(i),ndens(i) ! ion densities as percentage of eletron density. electron density is in m^-3.
+	read (11,fmt='(7g13.5)') edens(i),odens(i),hdens(i),hedens(i),o2dens(i),nodens(i),ndens(i) ! ion densities as percentage of eletron density. electron density is in m^-3.
 	read (13,fmt='(1F7.1)') b(i)
 	ne(i)=edens(i)*(1.0E-6) ! converting to cm^-3.
 	dentot(i)=(melec*edens(i))+(mprot*16*odens(i)*edens(i)/100)+(mprot*hdens(i)*edens(i)/100)+ &
@@ -627,7 +627,7 @@ end do
 !write(14,*) By2
 
 !!!!!
-do n=1,10000
+do n=1,100000
 	t=t+dt
 	By2(:,1)=by1(:)*tanh(t) 
 	!Jz(:,1)=jdrive(:)*tanh(t)
@@ -654,7 +654,7 @@ do n=1,10000
 			Ex2(i,k)=Ex2(i,k)-aaa1(k)*(By2(i,k)-By2(i,k-1))-bb1(k)*Ex2(i,k) ! no hx because Ex2 has it already
 		end do
 	end do
-	if (mod(n,40).eq.0) then
+	if (mod(n,50).eq.0) then
 		write(14,*) t,Ex2(2,34),By2(2,35)!,Ex2(2,634),By2(2,635),Ex2(2,734),By2(2,735),Ex2(2,834),By2(2,835),Ex2(2,934),By2(2,935)
 	end if ! look at what happens right at the edges, near 100 km 
 end do
