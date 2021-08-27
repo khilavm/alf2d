@@ -638,10 +638,10 @@ do n=1,100000
 		do i=2,12
 			By2(i,k)=By2(i,k)-aa*(Ex2(i,k+1)-Ex2(i,k))+ab*(Ez(i,k)-Ez(i-1,k))
 		end do
-	end do
+	end do ! plot Ex and Va*By and see if they're equal; they should be for a purely propagating wave with no reflections. also plot fields for various times at different z's
 	do k=1,995
 		do i=1,12
-			Jz(i,k)=Jz(i,k)+cc1(k)*Ez(i,k)-dt*rvcfei1(k)*Jz(i,k)
+			Jz(i,k)=Jz(i,k)+cc1(k)*Ez(i,k)-dt*rvcfei1(k)*Jz(i,k) !remove Jz and Ez parts to see if the Ex and By parts are working properly in tandem, to isolate problems 
 		end do
 	end do
 	do k=1,995
