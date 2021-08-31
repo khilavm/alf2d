@@ -1,0 +1,58 @@
+Mann, RL meeting:
+
+Play around with the parameters in IRI to get different Alfven wave and speed profiles, for example cordinates, different local times, different seasons, etc.
+
+Ask Bob: What is the Q factor? High Q is low damping, comes probably from electrical engineering terminology, called the quality factor. Look up Jackson on resonant cavities.
+
+Observations:
+
+When the x-coordinate is 2, all Ex's are bad, with jumps of 25 or more orders of magnitude around the second or third time step. For x=4, values of Ex are decent. An oscillatory behaviour is seen with weird smaller oscillations at the crests of the sine wave. Similar intersting stuff for a tanh profile. The proximity of the z coordinate to the top boundary does not seem to make any difference, except the the jump mentioned happens a couple of time steps sooner or later for farther points.
+
+x=6,12 are bad. 8 and 10 are fine. At the x's where the numbers seem fine, the first few time steps for some z's give extremely small values. 
+
+For By: x=2,6,12 bad, x=4,8,10 good. Oscillatory behaviour is seen for all 'bad' fields, even though the driving function is tanh. A normal increasing profile is observed for the 'good' fields as might be expected.
+
+All this was for the Ex and By part of the code. If all do loops are run, the numbers blow up by the 40th time step to give Nans thereafter.
+
+Could the lack of a boundary condition in the x direction be a reason for the blow-up?
+
+When taking the difference in x to be 1 as no derivatives in that direction for just the Alfven wave, it is found that x=2,5,6,9,12 are blowing up. This happens even when Ez is taken into account without any change in field values, regardless of whether Ez has been initialised properly or not. The remaining x coordinates values blow up when By is taken at odd coordinates and Ex at even, with Ex(:,2) initialised. However, x=8 is good for both cases.
+
+No change even after imposing boundary conditions in the x direction like Ex(12,:)=0.
+
+If there is a field By(13,3), this is technically undefined but is actually read as By(1,4) by Fortran. The first coordinate wraps around and adds to the second one.
+
+Test out the code with MSI's compiler. It is possible that gfortran is allowing some other arrays to overwrite the fields ones. MSI has commands to check this.
+
+At x=1 by printing the fields before the computing line it is seen that it is all fields are well behaved. At x=2, it is the Ex(2,3) field, the uninitialised one, which turns rogue first and thereby affects By similarly. It's a similar story with the same numbers when the write statement is after the equation.
+
+If Ex(:,3) is initialised then the blowup vanishes for all x. FALSE! Ex(2,3) behaves well now, but Ex(2,5) blows up.
+
+scratch.global to store files temporarily so that lots of data is not stored in our main folder. Load the .exe file, alfdip3d in RL's example is one such file. The last line only stores the .out file in the desired directory; all other output files are in the scratch.global directory.
+
+The (omega*)*dt<1 stability condition is similar to the Courant condition. Search in Vesely (chapter 4 - 4.1.2) for the logic behind it. As the plasma frequency is very high in the ionosphere, it demands a smaller time step to resolve it, but that would violate the Courant condition. We don't care about the plasma oscillations anyway, so we artificially reduce the plasma frequency by changing the permittivity. This keeps the electron inertial length the same which preserves the physics as long as the modified plasma frequency is still much larger than the length scale of the driving pulse.
+
+Do the following:
+
+Plots of Va under different IGRF conditions.
+Pseudodiploe geometry - B still goes as 1/r^3 and scale factors are included but without curvature. Valid in small regions near poles.
+Different boundary conditions at the bottom, particularly the inductive boundary condition used by Woodroffe in 2012 and afterwards.
+Poster for GEM in July. Deadline is July 1 so look that up.
+Plot a height integrated pedersen cond.
+Run code with By=0 and contrast with Ex=0 at z=46. The By=0 condition yields similar results as the Ex=0 at 46 condition. Both of them differ from no expicit condition but Ex taken down just to 45.
+
+The frequency of Ex depends on Va/scale height, which is the profile used by Greifinger and Greifinger. Look at RL's previous papers for that. Through that profile it depends on the density.
+
+Agenda 15/06: omega*time condition to set epspar takes care of blowup under new conditions; show fields near bottom boundary; what happens when an additional boundary condition is imposed at the top and discrepancy between plus and minus signs; fields with a sheet current initialisation at the top, 3 orders of magnitude weaker
+
+Agenda 22/6: show contrasting fields with Jz and By driving; height-integrated Pedersen conductivity computed and fields computed with sheet current boundary condition at the bottom end; discuss which is the best coordinate to put this at
+
+Agenda 29/06: composite 3/8 simpson's rule works; pedersen conductivity of 0.01 bad, 0.02 good; flux question: since we are only in 2d and field lines are vertical, there is no flux perpendicular to the xz plane; procedure outline for continuing code to higher altitudes. will it be similar for all quantities?
+
+Agenda 07/07: va and hdens are increasing: should there be only a power law and no exponential "decrease" upon extension?; correct coefficients for power laws and units for different densities. take the extremely small ones to be zero; a grid for x-points.
+
+Agenda: how to extrapolate electron temperature?;
+
+Segmentation faults are ususally the result of incorrect array allocation
+
+Agenda 20/08: courant condition works, density arrays have been cleaned up, no big jumps in speeds, fields initialise correctly at zero
