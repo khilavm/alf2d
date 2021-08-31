@@ -1,0 +1,4 @@
+module load intel/2018/release
+export BUILD=/panfs/roc/intel/x86_64/2018/parallel_studio_xe_msi/compilers_and_libraries_2018.0.128/linux/mkl 
+export LIBS="-lmkl_lapack95_lp64 -lmkl_intel_lp64 -lmkl_intel_thread -qopenmp -lpthread  -lmkl_core"
+ifort -qopenmp -o $1 $1.f90 -I$BUILD/include/intel64/lp64 $LIBS 
