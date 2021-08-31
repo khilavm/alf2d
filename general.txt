@@ -56,3 +56,5 @@ Agenda: how to extrapolate electron temperature?;
 Segmentation faults are ususally the result of incorrect array allocation
 
 Agenda 20/08: courant condition works, density arrays have been cleaned up, no big jumps in speeds, fields initialise correctly at zero
+
+Agenda 4/09: NaN issue persists when Ez and Jz are removed
