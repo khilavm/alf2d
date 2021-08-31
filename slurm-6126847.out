@@ -1,0 +1,4 @@
+ERROR: Unable to locate a modulefile for 'moab'
+ERROR: Unable to locate a modulefile for 'base'
+ERROR: Unable to locate a modulefile for 'ompi/intel'
+/var/spool/slurmd/job6126847/slurm_script: line 14: /home/lysakrl/majmu008/alf2d: Is a directory
