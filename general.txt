@@ -57,4 +57,4 @@ Segmentation faults are ususally the result of incorrect array allocation
 
 Agenda 20/08: courant condition works, density arrays have been cleaned up, no big jumps in speeds, fields initialise correctly at zero
 
-Agenda 4/09: NaN issue persists when Ez and Jz are removed; ex2=rva1*by2 until 1.35 secs, then start diverging with an order of magnitude change in rva1*by2
+Agenda 4/09: NaN issue persists when Ez and Jz are removed; ex2=rva1*by2 until 1.35 secs, then start diverging with an order of magnitude change in rva1*by2; running with different boundary conditions and in MSI gets it working till 6.9 secs
