@@ -57,4 +57,8 @@ Segmentation faults are ususally the result of incorrect array allocation
 
 Agenda 20/08: courant condition works, density arrays have been cleaned up, no big jumps in speeds, fields initialise correctly at zero
 
-Agenda 4/09: NaN issue persists when Ez and Jz are removed; ex2=rva1*by2 until 1.35 secs, then start diverging with an order of magnitude change in rva1*by2; running with different boundary conditions and in MSI gets it working till 6.9 secs
+Agenda 4/09: NaN issue persists when Ez and Jz are removed; ex2=rva1*by2 until 1.35 secs, then start diverging with an order of magnitude change in rva1*by2 (makes sense because that condition is true only for a purely propagating wave, under reflections and a bounce-back from teh ionosphere it will change); running with different boundary conditions and in MSI gets it working till 6.9 secs
+
+Tasks: instead of printing it out in one file, split it up into different files; as amount of data builds up, start printing out only max and min values (during meeting next week); plot out coefficients to find out large discontinuities if they exist
+
+Agenda: inquire about how to add aliases in putty 
