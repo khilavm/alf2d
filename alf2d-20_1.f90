@@ -70,7 +70,8 @@ open (13,file='B field_1.txt')
 !open (3,file='gyrofreq_1.txt',status='new')
 !open (4,file='wavespeed_1.txt',status='new')
 !open (5,file='pedersen,parallel_conds_1.txt',status='new')
-open (14,file='fields1.txt',status='new')
+!open (14,file='fields1.txt',status='new')
+open (15,file='coefficients.txt',status='new')
 
 do i=1,46
 	read (10,fmt='(2g13.5)') height(i),etemp(i)
@@ -541,7 +542,7 @@ sigped1=(c4/16)*(edens2*odens2/100)* &
 !!!!!
 cfei1(1)=cfei(46)
 do i=2,950
-	cfei1(i)=cfei(46)/(z(i)-1000)
+	cfei1(i)=cfei(46)/(z(i)-1000) !1000/z(i) instead. we want it to be equal to cfei(46) when z=1000
 	!write(14,*) i,cfei1(i)
 end do
 
@@ -571,8 +572,10 @@ beta1=alpha1(996:1:-1)
 pedrev1=sigped1(996:1:-1)
 rveden1=edens2(996:1:-1)
 rvcfei1=cfei_2(996:1:-1)
-rva1=va1(996:1:-1)
+rva1=va1(996:1:-1) ! plot out these coefficients and look for discontinuities in first derivatives
 !!!!!
+
+! tanh also has a discontinuity in the first derivative, so can also use tanh^2 sometimes
 
 !!!!!
 aaa1=aa/mu/eps/(1+beta1) 
@@ -580,7 +583,11 @@ bb1=(dt/eps/(1+beta1))*pedrev1
 bbb1=dt/dx/mu/epspar1/1000
 abc1=dt/epspar1
 cc1=dt*c5*rveden1
-bbb2=bbb1/hx/hy
+bbb2=bbb1/hx/hy ! plot out these coefficients and look for discontinuities in first derivatives
+
+do i=1,996
+	write (15,*) i,bbb2(i)
+end do
 !!!!!
 
 !!!!! Checking the Courant condition
@@ -627,39 +634,43 @@ end do
 !write(14,*) By2
 
 !!!!!
-do n=1,100000
+do n=1,7000
 	t=t+dt
-	By2(:,1)=by1(:)*tanh(t) 
+	!By2(:,1)=by1(:)*tanh(t) 
 	!Jz(:,1)=jdrive(:)*tanh(t)
-	!Ex(:,1)=ex1(:)*tanh(t)-rva(1)*By(:,1)!*tanh(t)!....lets the upcoming wave fly away through the top (+va to impose another reflection)....essentially sign of the poynting vector
-	Ex2(:,996)=0
+	Ex2(:,1)=ex1(:)*tanh(t)-rva1(1)*By2(:,1)!*tanh(t)!....lets the upcoming wave fly away through the top (+va to impose another reflection)....essentially sign of the poynting vector
+	Ex2(:,996)=0 
 	!Ex2(:,996)=(1/mu/0.02)*By2(:,995) ! find out experimentally what values of hintped the code can tolerate. compute conductivities below 100 km and use that in hintped and see if that affects values.
 	do k=1,995 ! jump by 1 now to make the k,k-1,k+1 separations work
 		do i=2,12
-			By2(i,k)=By2(i,k)-aa*(Ex2(i,k+1)-Ex2(i,k))+ab*(Ez(i,k)-Ez(i-1,k))
+			By2(i,k)=By2(i,k)-aa*(Ex2(i,k+1)-Ex2(i,k))!+ab*(Ez(i,k)-Ez(i-1,k))
+			!if (mod(n,50).eq.0) then
+			!	write(14,*) t,Ex2(2,34)/hx(34),rva1(34)*By2(2,34)/hy(34)
+			!end if 
 		end do
 	end do ! plot Ex and Va*By and see if they're equal; they should be for a purely propagating wave with no reflections. also plot fields for various times at different z's
-	do k=1,995
-		do i=1,12
-			Jz(i,k)=Jz(i,k)+cc1(k)*Ez(i,k)-dt*rvcfei1(k)*Jz(i,k) !remove Jz and Ez parts to see if the Ex and By parts are working properly in tandem, to isolate problems 
-		end do
-	end do
-	do k=1,995
-		do i=1,11
-			Ez(i,k)=Ez(i,k)+bbb2(k)*(By2(i+1,k)-By2(i,k))-abc1(k)*Jz(i,k)
-		end do	
-	end do
+!	do k=1,995
+!		do i=1,12
+!			Jz(i,k)=Jz(i,k)+cc1(k)*Ez(i,k)-dt*rvcfei1(k)*Jz(i,k) !remove Jz and Ez parts to see if the Ex and By parts are working properly in tandem, to isolate problems 
+!		end do
+!	end do
+!	do k=1,995
+!		do i=1,11
+!			Ez(i,k)=Ez(i,k)+bbb2(k)*(By2(i+1,k)-By2(i,k))-abc1(k)*Jz(i,k)
+!		end do	
+!	end do
 	do k=2,996 ! could take this to 45 to implement the Ex(:,46)=0 condition properly.
 		do i=1,12
 			Ex2(i,k)=Ex2(i,k)-aaa1(k)*(By2(i,k)-By2(i,k-1))-bb1(k)*Ex2(i,k) ! no hx because Ex2 has it already
 		end do
 	end do
-	if (mod(n,50).eq.0) then
-		write(14,*) t,Ex2(2,34),By2(2,35)!,Ex2(2,634),By2(2,635),Ex2(2,734),By2(2,735),Ex2(2,834),By2(2,835),Ex2(2,934),By2(2,935)
-	end if ! look at what happens right at the edges, near 100 km 
+	!if (mod(n,50).eq.0) then
+	!	write(14,*) t,Ex2(2,34),rva1(34)*By2(2,34)!,Ex2(2,634),By2(2,635),Ex2(2,734),By2(2,735),Ex2(2,834),By2(2,835),Ex2(2,934),By2(2,935)
+	!end if ! look at what happens right at the edges, near 100 km 
 end do
 !!!!!
 
-close(14)
+!close(14)
+close(15)
 
 end program grid
