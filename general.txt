@@ -61,4 +61,8 @@ Agenda 4/09: NaN issue persists when Ez and Jz are removed; ex2=rva1*by2 until 1
 
 Tasks: instead of printing it out in one file, split it up into different files; as amount of data builds up, start printing out only max and min values (during meeting next week); plot out coefficients to find out large discontinuities if they exist
 
-Agenda: inquire about how to add aliases in putty 
+Agenda 07/09: inquire about how to add aliases in putty; agu receipts
+
+Agenda 08/09: removing the pedersen conductivity works, problem should be with the coefficient bb1; show plots created at 734
+
+Tasks: problem probably with the calculation of the pedersen conductivity, as values shouldn't be more that about 10-4 mho/m. fiddle around with the formula to get that right.
