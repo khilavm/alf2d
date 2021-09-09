@@ -70,8 +70,8 @@ open (13,file='B field_1.txt')
 !open (3,file='gyrofreq_1.txt',status='new')
 !open (4,file='wavespeed_1.txt',status='new')
 !open (5,file='pedersen,parallel_conds_1.txt',status='new')
-!open (14,file='fields1.txt',status='new')
-open (15,file='coefficients.txt',status='new')
+open (14,file='fields1.txt',status='new')
+!open (15,file='coefficients.txt',status='new')
 
 do i=1,46
 	read (10,fmt='(2g13.5)') height(i),etemp(i)
@@ -271,7 +271,7 @@ nodens1=0
 
 edens2(1:46)=edens
 edens2(47:996)=edens1
-ne1=(1.0E-6)*edens2 !converting edens2 to CGS units from SI
+ne1=(1.0E-6)*edens2 !converting ro cm^-3
 odens2(1:46)=odens*edens/100
 odens2(47:996)=odens1
 hdens2(1:46)=hdens*edens/100
@@ -513,27 +513,27 @@ va1=1.0E-9*b2/sqrt(mu*dentot1)
 !!!!!
 
 !!!!!
-sigped1=(c4/16)*(edens2*odens2/100)* &
+sigped1=(c4/16)*odens2* &
 		  ((sqrt(cfoo_2)/(cfoo_2+gyo1))+(sqrt(cfn2o_2)/(cfn2o_2+gyo1))+(sqrt(cfo2o_2)/(cfo2o_2+gyo1))+ &
 		  (sqrt(cfheo_2)/(cfheo_2+gyo1))+(sqrt(cfaro_2)/(cfaro_2+gyo1))+(sqrt(cfho_2)/(cfho_2+gyo1))+ &
 		  (sqrt(cfno_2)/(cfno_2+gyo1))) + &
-		  c4*(edens2*hdens2/100)* &
+		  c4*hdens2* &
 		  ((sqrt(cfoh_2)/(cfoh_2+gyh1))+(sqrt(cfn2h_2)/(cfn2h_2+gyh1))+(sqrt(cfo2h_2)/(cfo2h_2+gyh1))+ &
 		  (sqrt(cfheh_2)/(cfheh_2+gyh1))+(sqrt(cfarh_2)/(cfarh_2+gyh1))+(sqrt(cfhh_2)/(cfhh_2+gyh1))+ &
 		  (sqrt(cfnh_2)/(cfnh_2+gyh1))) + &
-		  (c4/4)*(edens2*hedens2/100)* &
+		  (c4/4)*hedens2* &
 		  ((sqrt(cfohe_2)/(cfohe_2+gyhe1))+(sqrt(cfn2he_2)/(cfn2he_2+gyhe1))+(sqrt(cfo2he_2)/(cfo2he_2+gyhe1))+ &
 		  (sqrt(cfhehe_2)/(cfhehe_2+gyhe1))+(sqrt(cfarhe_2)/(cfarhe_2+gyhe1))+(sqrt(cfhhe_2)/(cfhhe_2+gyhe1))+ &
 		  (sqrt(cfnhe_2)/(cfnhe_2+gyhe1))) + &
-		  (c4/32)*(edens2*o2dens2/100)* &
+		  (c4/32)*o2dens2* &
 		  ((sqrt(cfoo2_2)/(cfoo2_2+gyo21))+(sqrt(cfn2o2_2)/(cfn2o2_2+gyo21))+(sqrt(cfo2o2_2)/(cfo2o2_2+gyo21))+ &
 		  (sqrt(cfheo2_2)/(cfheo2_2+gyo21))+(sqrt(cfaro2_2)/(cfaro2_2+gyo21))+(sqrt(cfho2_2)/(cfho2_2+gyo21))+ &
 		  (sqrt(cfno2_2)/(cfno2_2+gyo21))) + &
-		  (c4/30)*(edens2*nodens2/100)* &
+		  (c4/30)*nodens2* &
 		  ((sqrt(cfono_2)/(cfono_2+gyno1))+(sqrt(cfn2no_2)/(cfn2no_2+gyno1))+(sqrt(cfo2no_2)/(cfo2no_2+gyno1))+ &
 		  (sqrt(cfheno_2)/(cfheno_2+gyno1))+(sqrt(cfarno_2)/(cfarno_2+gyno1))+(sqrt(cfhno_2)/(cfhno_2+gyno1))+ &
 		  (sqrt(cfnno_2)/(cfnno_2+gyno1))) + &
-		  (c4/14)*(edens2*ndens2/100)* &
+		  (c4/14)*ndens2* &
 		  ((sqrt(cfon_2)/(cfon_2+gyn1))+(sqrt(cfn2n_2)/(cfn2n_2+gyn1))+(sqrt(cfo2n_2)/(cfo2n_2+gyn1))+ &
 		  (sqrt(cfhen_2)/(cfhen_2+gyn1))+(sqrt(cfarn_2)/(cfarn_2+gyn1))+(sqrt(cfhn_2)/(cfhn_2+gyn1))+ &
 		  (sqrt(cfnn_2)/(cfnn_2+gyn1)))
@@ -542,7 +542,7 @@ sigped1=(c4/16)*(edens2*odens2/100)* &
 !!!!!
 cfei1(1)=cfei(46)
 do i=2,950
-	cfei1(i)=cfei(46)/(z(i)-1000) !1000/z(i) instead. we want it to be equal to cfei(46) when z=1000
+	cfei1(i)=cfei(46)*1000/z(i) !1000/z(i) instead. we want it to be equal to cfei(46) when z=1000
 	!write(14,*) i,cfei1(i)
 end do
 
@@ -585,9 +585,9 @@ abc1=dt/epspar1
 cc1=dt*c5*rveden1
 bbb2=bbb1/hx/hy ! plot out these coefficients and look for discontinuities in first derivatives
 
-do i=1,996
-	write (15,*) i,bbb2(i)
-end do
+!do i=1,996
+!	write (15,*) i,cc1(i),bbb2(i),abc1(i),rvcfei1(i)
+!end do
 !!!!!
 
 !!!!! Checking the Courant condition
@@ -634,43 +634,40 @@ end do
 !write(14,*) By2
 
 !!!!!
-do n=1,7000
+do n=1,50000
 	t=t+dt
 	!By2(:,1)=by1(:)*tanh(t) 
 	!Jz(:,1)=jdrive(:)*tanh(t)
 	Ex2(:,1)=ex1(:)*tanh(t)-rva1(1)*By2(:,1)!*tanh(t)!....lets the upcoming wave fly away through the top (+va to impose another reflection)....essentially sign of the poynting vector
-	Ex2(:,996)=0 
-	!Ex2(:,996)=(1/mu/0.02)*By2(:,995) ! find out experimentally what values of hintped the code can tolerate. compute conductivities below 100 km and use that in hintped and see if that affects values.
+	!Ex2(:,996)=0 
+	Ex2(:,996)=(1/mu/0.02)*By2(:,995) ! find out experimentally what values of hintped the code can tolerate. compute conductivities below 100 km and use that in hintped and see if that affects values.
 	do k=1,995 ! jump by 1 now to make the k,k-1,k+1 separations work
 		do i=2,12
-			By2(i,k)=By2(i,k)-aa*(Ex2(i,k+1)-Ex2(i,k))!+ab*(Ez(i,k)-Ez(i-1,k))
-			!if (mod(n,50).eq.0) then
-			!	write(14,*) t,Ex2(2,34)/hx(34),rva1(34)*By2(2,34)/hy(34)
-			!end if 
+			By2(i,k)=By2(i,k)-aa*(Ex2(i,k+1)-Ex2(i,k))+ab*(Ez(i,k)-Ez(i-1,k))
 		end do
 	end do ! plot Ex and Va*By and see if they're equal; they should be for a purely propagating wave with no reflections. also plot fields for various times at different z's
-!	do k=1,995
-!		do i=1,12
-!			Jz(i,k)=Jz(i,k)+cc1(k)*Ez(i,k)-dt*rvcfei1(k)*Jz(i,k) !remove Jz and Ez parts to see if the Ex and By parts are working properly in tandem, to isolate problems 
-!		end do
-!	end do
-!	do k=1,995
-!		do i=1,11
-!			Ez(i,k)=Ez(i,k)+bbb2(k)*(By2(i+1,k)-By2(i,k))-abc1(k)*Jz(i,k)
-!		end do	
-!	end do
+	do k=1,995
+		do i=1,12
+			Jz(i,k)=Jz(i,k)+cc1(k)*Ez(i,k)-dt*rvcfei1(k)*Jz(i,k) !remove Jz and Ez parts to see if the Ex and By parts are working properly in tandem, to isolate problems 
+		end do
+	end do
+	do k=1,995
+		do i=1,11
+			Ez(i,k)=Ez(i,k)+bbb2(k)*(By2(i+1,k)-By2(i,k))-abc1(k)*Jz(i,k)
+		end do	
+	end do
 	do k=2,996 ! could take this to 45 to implement the Ex(:,46)=0 condition properly.
 		do i=1,12
 			Ex2(i,k)=Ex2(i,k)-aaa1(k)*(By2(i,k)-By2(i,k-1))-bb1(k)*Ex2(i,k) ! no hx because Ex2 has it already
 		end do
 	end do
-	!if (mod(n,50).eq.0) then
-	!	write(14,*) t,Ex2(2,34),rva1(34)*By2(2,34)!,Ex2(2,634),By2(2,635),Ex2(2,734),By2(2,735),Ex2(2,834),By2(2,835),Ex2(2,934),By2(2,935)
-	!end if ! look at what happens right at the edges, near 100 km 
+	if (mod(n,50).eq.0) then
+		write(14,*) t,Ex2(2,200)!,By2(2,200)!,Ex2(2,134),By2(2,134),Ex2(2,234),By2(2,234),Ex2(2,734),By2(2,734)
+	end if ! look at what happens right at the edges, near 100 km 
 end do
 !!!!!
 
-!close(14)
-close(15)
+close(14)
+!close(15)
 
 end program grid
