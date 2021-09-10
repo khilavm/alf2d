@@ -67,4 +67,6 @@ Agenda 08/09: removing the pedersen conductivity works, problem should be with t
 
 Tasks: problem probably with the calculation of the pedersen conductivity, as values shouldn't be more that about 10-4 mho/m. fiddle around with the formula to get that right.
 
-Agenda: sigped1 problem fixed by using the proper densities in the formula. initial formula had then in percentages but in the extended code that changed to the bare numbers. this got the alfven part running. NaNs still cropped up in the full code, so modified the extension of the electron-ion collision frequency but still getting NaNs after 6.5s
+Agenda 10/09: sigped1 problem fixed by using the proper densities in the formula. initial formula had then in percentages but in the extended code that changed to the bare numbers. this got the alfven part running. NaNs still cropped up in the full code, so modified the extension of the electron-ion collision frequency but still getting NaNs after 6.55s; ask how to get multiple columns printed properly through msi
+
+Tasks: (*) format is giving garbage for more than two columns so use fmt=..12.5 or something like that; print out all fields to see which one goes rogue first, dig deeper into the coefficients
