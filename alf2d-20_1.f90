@@ -26,7 +26,7 @@ real(8),parameter :: const2=(echarge**2)*(1.0E-18)/(melec)**2,const3=2.6E-9,c4=(
 
 real(8),dimension(950) :: edens1,odens1,hdens1,ndens1,hedens1,o2dens1,nodens1
 real(8),dimension(950) :: z,b1,cfoo1,cfoh1,cfohe1,cfoo21,cfono1,cfon1,cfo2o1,cfo2h1,cfo2he1,cfo2o21,cfo2no1,cfo2n1
-real(8),dimension(950) :: cfn2o1,cfn2h1,cfn2he1,cfn2o21,cfn2no1,cfn2n1,cfei1
+real(8),dimension(950) :: cfn2o1,cfn2h1,cfn2he1,cfn2o21,cfn2no1,cfn2n1,cfei1,sigped1
 real(8),dimension(950) :: cfheo1,cfheh1,cfhehe1,cfheo21,cfheno1,cfhen1,cfaro1,cfarh1,cfarhe1,cfaro21,cfarno1,cfarn1
 real(8),dimension(950) :: cfho1,cfhh1,cfhhe1,cfho21,cfhno1,cfhn1,cfno1,cfnh1,cfnhe1,cfno21,cfnno1,cfnn1
 real(8),dimension(996) :: b2,hx,hy,edens2,ne1,odens2,hdens2,hedens2,o2dens2,nodens2,ndens2,dentot1
@@ -38,7 +38,7 @@ real(8),dimension(996) :: cfaro_2,cfarh_2,cfarhe_2,cfaro2_2,cfarno_2,cfarn_2
 real(8),dimension(996) :: cfho_2,cfhh_2,cfhhe_2,cfho2_2,cfhno_2,cfhn_2
 real(8),dimension(996) :: cfno_2,cfnh_2,cfnhe_2,cfno2_2,cfnno_2,cfnn_2
 real(8),dimension(996) :: pfe1,pfo1,pfh1,pfhe1,pfo21,pfno1,pfn1,gye1,gyo1,gyh1,gyhe1,gyo21,gyno1,gyn1
-real(8),dimension(996) :: alpha1,speed1,va1,sigped1,cfei_2,sigpar1,epspar1,beta1,pedrev1,rveden1,rvcfei1,rva1
+real(8),dimension(996) :: alpha1,speed1,va1,sigped2,cfei_2,sigpar1,epspar1,beta1,pedrev1,rveden1,rvcfei1,rva1
 real(8),dimension(996) :: aaa1,bb1,bbb1,abc1,cc1,bbb2,cour1
 real(8),dimension(12,996) :: Jz2,Ex2,By2,Ez2
 
@@ -71,7 +71,7 @@ open (13,file='B field_1.txt')
 !open (4,file='wavespeed_1.txt',status='new')
 !open (5,file='pedersen,parallel_conds_1.txt',status='new')
 open (14,file='fields1.txt',status='new')
-!open (15,file='coefficients.txt',status='new')
+open (15,file='coefficients.txt',status='new')
 
 do i=1,46
 	read (10,fmt='(2g13.5)') height(i),etemp(i)
@@ -259,7 +259,7 @@ end do
 
 !!!!! setting profiles for oxygen, hydrogen and nitrogen ion densities beyond 1000 km, and putting the rest to zero since their concentrations are already low or zero at 1000 km.
 do i=1,950 
-	odens1(i)=(odens(46)*edens(46)/100)*exp(-(z(i)-1000)/1000) !SI units
+	odens1(i)=(odens(46)*edens(46)/100)*exp(-(z(i)-1000)/1000) !SI units, no more as percentages
 	hdens1(i)=hdens(46)*edens(46)*10/z(i)
 	ndens1(i)=(ndens(46)*edens(46)/100)*exp(-(z(i)-1000)/1000)
 	edens1(i)=odens1(i)+hdens1(i)+ndens1(i) 
@@ -271,7 +271,7 @@ nodens1=0
 
 edens2(1:46)=edens
 edens2(47:996)=edens1
-ne1=(1.0E-6)*edens2 !converting ro cm^-3
+ne1=(1.0E-6)*edens2 !converting to cm^-3
 odens2(1:46)=odens*edens/100
 odens2(47:996)=odens1
 hdens2(1:46)=hdens*edens/100
@@ -513,36 +513,44 @@ va1=1.0E-9*b2/sqrt(mu*dentot1)
 !!!!!
 
 !!!!!
-sigped1=(c4/16)*odens2* &
-		  ((sqrt(cfoo_2)/(cfoo_2+gyo1))+(sqrt(cfn2o_2)/(cfn2o_2+gyo1))+(sqrt(cfo2o_2)/(cfo2o_2+gyo1))+ &
-		  (sqrt(cfheo_2)/(cfheo_2+gyo1))+(sqrt(cfaro_2)/(cfaro_2+gyo1))+(sqrt(cfho_2)/(cfho_2+gyo1))+ &
-		  (sqrt(cfno_2)/(cfno_2+gyo1))) + &
-		  c4*hdens2* &
-		  ((sqrt(cfoh_2)/(cfoh_2+gyh1))+(sqrt(cfn2h_2)/(cfn2h_2+gyh1))+(sqrt(cfo2h_2)/(cfo2h_2+gyh1))+ &
-		  (sqrt(cfheh_2)/(cfheh_2+gyh1))+(sqrt(cfarh_2)/(cfarh_2+gyh1))+(sqrt(cfhh_2)/(cfhh_2+gyh1))+ &
-		  (sqrt(cfnh_2)/(cfnh_2+gyh1))) + &
-		  (c4/4)*hedens2* &
-		  ((sqrt(cfohe_2)/(cfohe_2+gyhe1))+(sqrt(cfn2he_2)/(cfn2he_2+gyhe1))+(sqrt(cfo2he_2)/(cfo2he_2+gyhe1))+ &
-		  (sqrt(cfhehe_2)/(cfhehe_2+gyhe1))+(sqrt(cfarhe_2)/(cfarhe_2+gyhe1))+(sqrt(cfhhe_2)/(cfhhe_2+gyhe1))+ &
-		  (sqrt(cfnhe_2)/(cfnhe_2+gyhe1))) + &
-		  (c4/32)*o2dens2* &
-		  ((sqrt(cfoo2_2)/(cfoo2_2+gyo21))+(sqrt(cfn2o2_2)/(cfn2o2_2+gyo21))+(sqrt(cfo2o2_2)/(cfo2o2_2+gyo21))+ &
-		  (sqrt(cfheo2_2)/(cfheo2_2+gyo21))+(sqrt(cfaro2_2)/(cfaro2_2+gyo21))+(sqrt(cfho2_2)/(cfho2_2+gyo21))+ &
-		  (sqrt(cfno2_2)/(cfno2_2+gyo21))) + &
-		  (c4/30)*nodens2* &
-		  ((sqrt(cfono_2)/(cfono_2+gyno1))+(sqrt(cfn2no_2)/(cfn2no_2+gyno1))+(sqrt(cfo2no_2)/(cfo2no_2+gyno1))+ &
-		  (sqrt(cfheno_2)/(cfheno_2+gyno1))+(sqrt(cfarno_2)/(cfarno_2+gyno1))+(sqrt(cfhno_2)/(cfhno_2+gyno1))+ &
-		  (sqrt(cfnno_2)/(cfnno_2+gyno1))) + &
-		  (c4/14)*ndens2* &
-		  ((sqrt(cfon_2)/(cfon_2+gyn1))+(sqrt(cfn2n_2)/(cfn2n_2+gyn1))+(sqrt(cfo2n_2)/(cfo2n_2+gyn1))+ &
-		  (sqrt(cfhen_2)/(cfhen_2+gyn1))+(sqrt(cfarn_2)/(cfarn_2+gyn1))+(sqrt(cfhn_2)/(cfhn_2+gyn1))+ &
-		  (sqrt(cfnn_2)/(cfnn_2+gyn1)))
+!sigped1=(c4/16)*odens2* &
+!		  ((sqrt(cfoo_2)/(cfoo_2+gyo1))+(sqrt(cfn2o_2)/(cfn2o_2+gyo1))+(sqrt(cfo2o_2)/(cfo2o_2+gyo1))+ &
+!		  (sqrt(cfheo_2)/(cfheo_2+gyo1))+(sqrt(cfaro_2)/(cfaro_2+gyo1))+(sqrt(cfho_2)/(cfho_2+gyo1))+ &
+!		  (sqrt(cfno_2)/(cfno_2+gyo1))) + &
+!		  c4*hdens2* &
+!		  ((sqrt(cfoh_2)/(cfoh_2+gyh1))+(sqrt(cfn2h_2)/(cfn2h_2+gyh1))+(sqrt(cfo2h_2)/(cfo2h_2+gyh1))+ &
+!		  (sqrt(cfheh_2)/(cfheh_2+gyh1))+(sqrt(cfarh_2)/(cfarh_2+gyh1))+(sqrt(cfhh_2)/(cfhh_2+gyh1))+ &
+!		  (sqrt(cfnh_2)/(cfnh_2+gyh1))) + &
+!		  (c4/4)*hedens2* &
+!		  ((sqrt(cfohe_2)/(cfohe_2+gyhe1))+(sqrt(cfn2he_2)/(cfn2he_2+gyhe1))+(sqrt(cfo2he_2)/(cfo2he_2+gyhe1))+ &
+!		  (sqrt(cfhehe_2)/(cfhehe_2+gyhe1))+(sqrt(cfarhe_2)/(cfarhe_2+gyhe1))+(sqrt(cfhhe_2)/(cfhhe_2+gyhe1))+ &
+!		  (sqrt(cfnhe_2)/(cfnhe_2+gyhe1))) + &
+!		  (c4/32)*o2dens2* &
+!		  ((sqrt(cfoo2_2)/(cfoo2_2+gyo21))+(sqrt(cfn2o2_2)/(cfn2o2_2+gyo21))+(sqrt(cfo2o2_2)/(cfo2o2_2+gyo21))+ &
+!		  (sqrt(cfheo2_2)/(cfheo2_2+gyo21))+(sqrt(cfaro2_2)/(cfaro2_2+gyo21))+(sqrt(cfho2_2)/(cfho2_2+gyo21))+ &
+!		  (sqrt(cfno2_2)/(cfno2_2+gyo21))) + &
+!		  (c4/30)*nodens2* &
+!		  ((sqrt(cfono_2)/(cfono_2+gyno1))+(sqrt(cfn2no_2)/(cfn2no_2+gyno1))+(sqrt(cfo2no_2)/(cfo2no_2+gyno1))+ &
+!		  (sqrt(cfheno_2)/(cfheno_2+gyno1))+(sqrt(cfarno_2)/(cfarno_2+gyno1))+(sqrt(cfhno_2)/(cfhno_2+gyno1))+ &
+!		  (sqrt(cfnno_2)/(cfnno_2+gyno1))) + &
+!		  (c4/14)*ndens2* &
+!		  ((sqrt(cfon_2)/(cfon_2+gyn1))+(sqrt(cfn2n_2)/(cfn2n_2+gyn1))+(sqrt(cfo2n_2)/(cfo2n_2+gyn1))+ &
+!		  (sqrt(cfhen_2)/(cfhen_2+gyn1))+(sqrt(cfarn_2)/(cfarn_2+gyn1))+(sqrt(cfhn_2)/(cfhn_2+gyn1))+ &
+!		  (sqrt(cfnn_2)/(cfnn_2+gyn1)))
+
+sigped1(1)=sigped(46)
+do i=2,950
+	sigped1(i)=sigped(46)*1000/z(i)
+end do
+
+sigped2(1:46)=sigped
+sigped2(47:996)=sigped1
 !!!!!
 
 !!!!!
 cfei1(1)=cfei(46)
 do i=2,950
-	cfei1(i)=cfei(46)*1000/z(i) !1000/z(i) instead. we want it to be equal to cfei(46) when z=1000
+	cfei1(i)=cfei(46)*1000/z(i)
 	!write(14,*) i,cfei1(i)
 end do
 
@@ -569,7 +577,7 @@ end do
 
 !!!!!
 beta1=alpha1(996:1:-1)
-pedrev1=sigped1(996:1:-1)
+pedrev1=sigped2(996:1:-1)
 rveden1=edens2(996:1:-1)
 rvcfei1=cfei_2(996:1:-1)
 rva1=va1(996:1:-1) ! plot out these coefficients and look for discontinuities in first derivatives
@@ -581,13 +589,13 @@ rva1=va1(996:1:-1) ! plot out these coefficients and look for discontinuities in
 aaa1=aa/mu/eps/(1+beta1) 
 bb1=(dt/eps/(1+beta1))*pedrev1
 bbb1=dt/dx/mu/epspar1/1000
-abc1=dt/epspar1
-cc1=dt*c5*rveden1
 bbb2=bbb1/hx/hy ! plot out these coefficients and look for discontinuities in first derivatives
+cc1=dt*c5*rveden1
+abc1=dt/epspar1
 
-!do i=1,996
-!	write (15,*) i,cc1(i),bbb2(i),abc1(i),rvcfei1(i)
-!end do
+do i=1,996
+	write (15,fmt='(10g12.5)') i,aaa1(i),bb1(i),bbb1(i),bbb2(i),hx(i),hy(i),cc1(i),abc1(i),rvcfei1(i)
+end do
 !!!!!
 
 !!!!! Checking the Courant condition
@@ -634,7 +642,7 @@ end do
 !write(14,*) By2
 
 !!!!!
-do n=1,50000
+do n=1,10000
 	t=t+dt
 	!By2(:,1)=by1(:)*tanh(t) 
 	!Jz(:,1)=jdrive(:)*tanh(t)
@@ -648,7 +656,7 @@ do n=1,50000
 	end do ! plot Ex and Va*By and see if they're equal; they should be for a purely propagating wave with no reflections. also plot fields for various times at different z's
 	do k=1,995
 		do i=1,12
-			Jz(i,k)=Jz(i,k)+cc1(k)*Ez(i,k)-dt*rvcfei1(k)*Jz(i,k) !remove Jz and Ez parts to see if the Ex and By parts are working properly in tandem, to isolate problems 
+			Jz(i,k)=Jz(i,k)+cc1(k)*Ez(i,k)-dt*rvcfei1(k)*Jz(i,k)
 		end do
 	end do
 	do k=1,995
@@ -656,18 +664,18 @@ do n=1,50000
 			Ez(i,k)=Ez(i,k)+bbb2(k)*(By2(i+1,k)-By2(i,k))-abc1(k)*Jz(i,k)
 		end do	
 	end do
-	do k=2,996 ! could take this to 45 to implement the Ex(:,46)=0 condition properly.
+	do k=2,996
 		do i=1,12
-			Ex2(i,k)=Ex2(i,k)-aaa1(k)*(By2(i,k)-By2(i,k-1))-bb1(k)*Ex2(i,k) ! no hx because Ex2 has it already
+			Ex2(i,k)=Ex2(i,k)-aaa1(k)*(By2(i,k)-By2(i,k-1))-bb1(k)*Ex2(i,k) ! no hx in second term because Ex2 has it already
 		end do
 	end do
 	if (mod(n,50).eq.0) then
-		write(14,*) t,Ex2(2,200)!,By2(2,200)!,Ex2(2,134),By2(2,134),Ex2(2,234),By2(2,234),Ex2(2,734),By2(2,734)
-	end if ! look at what happens right at the edges, near 100 km 
+		write(14,fmt='(5g13.5)') t,Ex2(2,200),By2(2,200),Ez(2,200),Jz(2,200)!,Ex2(2,234),By2(2,234),Ex2(2,734),By2(2,734)
+	end if 
 end do
 !!!!!
 
 close(14)
-!close(15)
+close(15)
 
 end program grid
