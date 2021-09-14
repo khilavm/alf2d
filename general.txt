@@ -70,3 +70,5 @@ Tasks: problem probably with the calculation of the pedersen conductivity, as va
 Agenda 10/09: sigped1 problem fixed by using the proper densities in the formula. initial formula had then in percentages but in the extended code that changed to the bare numbers. this got the alfven part running. NaNs still cropped up in the full code, so modified the extension of the electron-ion collision frequency but still getting NaNs after 6.55s; ask how to get multiple columns printed properly through msi
 
 Tasks: (*) format is giving garbage for more than two columns so use fmt=..12.5 or something like that; print out all fields to see which one goes rogue first, dig deeper into the coefficients
+
+Agenda: changed extension of pedersen conductivity to smoothen out transition to zero befond 1000 km. this didn't change anything with regards to the NaNs.
