@@ -71,4 +71,6 @@ Agenda 10/09: sigped1 problem fixed by using the proper densities in the formula
 
 Tasks: (*) format is giving garbage for more than two columns so use fmt=..12.5 or something like that; print out all fields to see which one goes rogue first, dig deeper into the coefficients
 
-Agenda: changed extension of pedersen conductivity to smoothen out transition to zero befond 1000 km. this didn't change anything with regards to the NaNs.
+Agenda 14/09: changed extension of pedersen conductivity to smoothen out transition to zero befond 1000 km. this didn't change anything with regards to the NaNs.
+
+Agenda 15/09: changed extensions of oxygen and nitrogen densities to power laws from exponential. the loops ran for around 30 secs and then started giving NaNs.
