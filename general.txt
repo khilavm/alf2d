@@ -74,3 +74,5 @@ Tasks: (*) format is giving garbage for more than two columns so use fmt=..12.5 
 Agenda 14/09: changed extension of pedersen conductivity to smoothen out transition to zero befond 1000 km. this didn't change anything with regards to the NaNs.
 
 Agenda 15/09: changed extensions of oxygen and nitrogen densities to power laws from exponential. the loops ran for around 30 secs and then started giving NaNs.
+
+Agenda 16/09: make the time step smaller; plot out fields until they go bad to see if there are weird things happening; bob will send a routine to tell ifort to perform deeper checks of the code for errors
