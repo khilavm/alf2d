@@ -71,7 +71,7 @@ Agenda 10/09: sigped1 problem fixed by using the proper densities in the formula
 
 Tasks: (*) format is giving garbage for more than two columns so use fmt=..12.5 or something like that; print out all fields to see which one goes rogue first, dig deeper into the coefficients
 
-Agenda 14/09: changed extension of pedersen conductivity to smoothen out transition to zero befond 1000 km. this didn't change anything with regards to the NaNs.
+Agenda 14/09: changed extension of pedersen conductivity to smoothen out transition to zero beyond 1000 km. this didn't change anything with regards to the NaNs.
 
 Agenda 15/09: changed extensions of oxygen and nitrogen densities to power laws from exponential. the loops ran for around 30 secs and then started giving NaNs.
 
@@ -86,3 +86,5 @@ Agenda 20/09: Same NaN type behaviour even after halving and quartering the time
 Note: alpha1 and sigped1 profiles have been changed from directly following the densities and frequencies to having power law fall-offs on their own
 
 Update 20/09: in business till at least 100s. problem was with not taking the reversed parallel conductivity in the coefficients for the z-direction. that was probably causing issues.
+
+Tasks: run the code for the extreme conditions mentioned by Ian Mann and compare results; upload all results to github to avoid confusion later on; learn a proper plotting method like python or julia or whatever else to avoid mucking about on gnuplot or excel anymore
