@@ -39,12 +39,12 @@ real(8),dimension(996) :: cfho_2,cfhh_2,cfhhe_2,cfho2_2,cfhno_2,cfhn_2
 real(8),dimension(996) :: cfno_2,cfnh_2,cfnhe_2,cfno2_2,cfnno_2,cfnn_2
 real(8),dimension(996) :: pfe1,pfo1,pfh1,pfhe1,pfo21,pfno1,pfn1,gye1,gyo1,gyh1,gyhe1,gyo21,gyno1,gyn1
 real(8),dimension(996) :: alpha1,speed1,va1,sigped2,cfei_2,sigpar1,epspar1,beta1,pedrev1,rveden1,rvcfei1,rva1
-real(8),dimension(996) :: aaa1,bb1,bbb1,abc1,cc1,bbb2,cour1
+real(8),dimension(996) :: aaa1,bb1,bbb1,abc1,cc1,bbb2,cour1,rvepspar1
 real(8),dimension(12,996) :: Jz2,Ex2,By2,Ez2
 
 real(8),allocatable,dimension(:) :: cour,aaa,bb,cc,ex1,x,dentot,va,rva,jdrive,by1
 real(8),allocatable,dimension(:,:) :: Jz,Ex,By,Ez
-real(8),parameter :: dt=2.0E-4,dx=5,dz=20,mu=1.26E-6,tramp=200,ex0=3.0E-3,jz0=1.0E-6,re=6400
+real(8),parameter :: dt=1.0E-3,dx=5,dz=20,mu=1.26E-6,tramp=200,ex0=3.0E-3,jz0=1.0E-6,re=6400
 real(8) :: t,aa,ab,hintpedz,hintpeds,dump1,dump2,dump3,dump4
 integer(8) :: n
 
@@ -71,7 +71,7 @@ open (13,file='B field_1.txt')
 !open (4,file='wavespeed_1.txt',status='new')
 !open (5,file='pedersen,parallel_conds_1.txt',status='new')
 open (14,file='fields1.txt',status='new')
-open (15,file='coefficients.txt',status='new')
+!open (15,file='coefficients.txt',status='new')
 
 do i=1,46
 	read (10,fmt='(2g13.5)') height(i),etemp(i)
@@ -259,9 +259,9 @@ end do
 
 !!!!! setting profiles for oxygen, hydrogen and nitrogen ion densities beyond 1000 km, and putting the rest to zero since their concentrations are already low or zero at 1000 km.
 do i=1,950 
-	odens1(i)=(odens(46)*edens(46)/100)*1000/z(i)!exp(-(z(i)-1000)/1000) !SI units, no longer as percentages
+	odens1(i)=(odens(46)*edens(46)/100)*exp(-(z(i)-1000)/1000) !SI units, no longer as percentages
 	hdens1(i)=hdens(46)*edens(46)*10/z(i)
-	ndens1(i)=(ndens(46)*edens(46)/100)*1000/z(i)!exp(-(z(i)-1000)/1000)
+	ndens1(i)=(ndens(46)*edens(46)/100)*exp(-(z(i)-1000)/1000)
 	edens1(i)=odens1(i)+hdens1(i)+ndens1(i) 
 	!write(14,*) i,odens1(i),hdens1(i),ndens(i),edens1(i)
 end do
@@ -501,6 +501,15 @@ alpha1=(pfe1/gye1)+(pfo1*((1/(cfoo_2+gyo1))+(1/(cfn2o_2+gyo1))+(1/(cfo2o_2+gyo1)
 			 (1/(cfheno_2+gyno1))+(1/(cfarno_2+gyno1))+(1/(cfhno_2+gyno1))+(1/(cfnno_2+gyno1))))+ &
 			 (pfn1*((1/(cfon_2+gyn1))+(1/(cfn2n_2+gyn1))+(1/(cfo2n_2+gyn1))+ &
 			 (1/(cfhen_2+gyn1))+(1/(cfarn_2+gyn1))+(1/(cfhn_2+gyn1))+(1/(cfnn_2+gyn1))))
+
+!alpha1(1)=alpha(46)
+!do i=2,950
+!	alpha1(i)=alpha(46)*1000/z(i)
+!end do
+
+!alpha2(1:46)=alpha
+!alpha2(47:996)=alpha1
+
 speed1=c/((1+alpha1)**0.5)
 va1=1.0E-9*b2/sqrt(mu*dentot1)
 !!!!!
@@ -575,6 +584,7 @@ end do
 !!!!!
 
 !!!!!
+rvepspar1=epspar1(996:1:-1)
 beta1=alpha1(996:1:-1)
 pedrev1=sigped2(996:1:-1)
 rveden1=edens2(996:1:-1)
@@ -587,14 +597,14 @@ rva1=va1(996:1:-1) ! plot out these coefficients and look for discontinuities in
 !!!!!
 aaa1=aa/mu/eps/(1+beta1) 
 bb1=(dt/eps/(1+beta1))*pedrev1
-bbb1=dt/dx/mu/epspar1/1000
+bbb1=dt/dx/mu/rvepspar1/1000
 bbb2=bbb1/hx/hy ! plot out these coefficients and look for discontinuities in first derivatives
 cc1=dt*c5*rveden1
-abc1=dt/epspar1
+abc1=dt/rvepspar1
 
-do i=1,996
-	write (15,fmt='(3g12.5)') i,speed1(i),alpha1(i)
-end do
+!do i=1,996
+!	write (15,fmt='(5g12.5)') i,bbb2(i),cc1(i),abc1(i),rvcfei1(i)
+!end do
 !!!!!
 
 !!!!! Checking the Courant condition
@@ -642,7 +652,7 @@ end do
 !write(14,*) By2
 
 !!!!!
-do n=1,150000
+do n=1,100000
 	t=t+dt
 	!By2(:,1)=by1(:)*tanh(t) 
 	!Jz(:,1)=jdrive(:)*tanh(t)
@@ -651,7 +661,7 @@ do n=1,150000
 	Ex2(:,996)=(1/mu/0.02)*By2(:,995) ! find out experimentally what values of hintped the code can tolerate. compute conductivities below 100 km and use that in hintped and see if that affects values.
 	do k=1,995 ! jump by 1 now to make the k,k-1,k+1 separations work
 		do i=2,12
-			By2(i,k)=By2(i,k)-aa*(Ex2(i,k+1)-Ex2(i,k))+ab*(Ez(i,k)-Ez(i-1,k))
+			By2(i,k)=By2(i,k)-aa*(Ex2(i,k+1)-Ex2(i,k))!+ab*(Ez(i,k)-Ez(i-1,k))
 		end do
 	end do ! plot Ex and Va*By and see if they're equal; they should be for a purely propagating wave with no reflections. also plot fields for various times at different z's
 	do k=1,995
@@ -669,13 +679,13 @@ do n=1,150000
 			Ex2(i,k)=Ex2(i,k)-aaa1(k)*(By2(i,k)-By2(i,k-1))-bb1(k)*Ex2(i,k) ! no hx in second term because Ex2 has it already
 		end do
 	end do
-	if (n.ge.125000.and.mod(n,20).eq.0) then
-		write(14,fmt='(5g13.5)') t,Ex2(2,200),By2(2,200),Ez(2,200),Jz(2,200)!,Ex2(2,967),By2(2,967),Ez(2,967),Jz(2,967)!,Ex2(2,234),By2(2,234),Ex2(2,734),By2(2,734)
+	if (mod(n,50).eq.0) then
+		write(14,fmt='(5g13.5)') t,Ex2(2,980),By2(2,980),Jz(2,980),Ez(2,980)!,Ez(2,967),Jz(2,967)!,Ex2(2,234),By2(2,234),Ex2(2,734),By2(2,734)
 	end if 
 end do
 !!!!!
 
 close(14)
-close(15)
+!close(15)
 
 end program grid
