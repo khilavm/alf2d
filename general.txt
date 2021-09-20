@@ -76,3 +76,9 @@ Agenda 14/09: changed extension of pedersen conductivity to smoothen out transit
 Agenda 15/09: changed extensions of oxygen and nitrogen densities to power laws from exponential. the loops ran for around 30 secs and then started giving NaNs.
 
 Agenda 16/09: make the time step smaller; plot out fields until they go bad to see if there are weird things happening; bob will send a routine to tell ifort to perform deeper checks of the code for errors
+
+Agenda 17/09: -check all command added to ifort script but no change in field behaviour. the NaNs started appearing 5 seconds earlier.
+
+Tasks: reduce time step; reduce gap between printed times, put a condition that prints out field values only after 20-30 secs or so
+
+Agenda 20/09: Same NaN type behaviour even after halving and quartering the time step to 2E-4s. Fields go rogue at the same time; discuss orals committee. formation and dates; are the results physically valid until the time it blows up?; show speed1 and alpha1 plots; about 14s for the wave to cross 19000km based on highest wave speed, 
