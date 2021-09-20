@@ -44,7 +44,7 @@ real(8),dimension(12,996) :: Jz2,Ex2,By2,Ez2
 
 real(8),allocatable,dimension(:) :: cour,aaa,bb,cc,ex1,x,dentot,va,rva,jdrive,by1
 real(8),allocatable,dimension(:,:) :: Jz,Ex,By,Ez
-real(8),parameter :: dt=1.0E-3,dx=5,dz=20,mu=1.26E-6,tramp=200,ex0=3.0E-3,jz0=1.0E-6,re=6400
+real(8),parameter :: dt=2.0E-4,dx=5,dz=20,mu=1.26E-6,tramp=200,ex0=3.0E-3,jz0=1.0E-6,re=6400
 real(8) :: t,aa,ab,hintpedz,hintpeds,dump1,dump2,dump3,dump4
 integer(8) :: n
 
@@ -259,9 +259,9 @@ end do
 
 !!!!! setting profiles for oxygen, hydrogen and nitrogen ion densities beyond 1000 km, and putting the rest to zero since their concentrations are already low or zero at 1000 km.
 do i=1,950 
-	odens1(i)=(odens(46)*edens(46)/100)*exp(-(z(i)-1000)/1000) !SI units, no more as percentages
+	odens1(i)=(odens(46)*edens(46)/100)*1000/z(i)!exp(-(z(i)-1000)/1000) !SI units, no longer as percentages
 	hdens1(i)=hdens(46)*edens(46)*10/z(i)
-	ndens1(i)=(ndens(46)*edens(46)/100)*exp(-(z(i)-1000)/1000)
+	ndens1(i)=(ndens(46)*edens(46)/100)*1000/z(i)!exp(-(z(i)-1000)/1000)
 	edens1(i)=odens1(i)+hdens1(i)+ndens1(i) 
 	!write(14,*) i,odens1(i),hdens1(i),ndens(i),edens1(i)
 end do
@@ -503,7 +503,6 @@ alpha1=(pfe1/gye1)+(pfo1*((1/(cfoo_2+gyo1))+(1/(cfn2o_2+gyo1))+(1/(cfo2o_2+gyo1)
 			 (1/(cfhen_2+gyn1))+(1/(cfarn_2+gyn1))+(1/(cfhn_2+gyn1))+(1/(cfnn_2+gyn1))))
 speed1=c/((1+alpha1)**0.5)
 va1=1.0E-9*b2/sqrt(mu*dentot1)
-!write (14,*) speed1 ! big jumps in speed just above 1000 because of abnormal behaviour of edens1. this jump might be making the code give zeroes for the field values.
 !!!!!
 
 !!!!!
@@ -594,7 +593,7 @@ cc1=dt*c5*rveden1
 abc1=dt/epspar1
 
 do i=1,996
-	write (15,fmt='(10g12.5)') i,aaa1(i),bb1(i),bbb1(i),bbb2(i),hx(i),hy(i),cc1(i),abc1(i),rvcfei1(i)
+	write (15,fmt='(3g12.5)') i,speed1(i),alpha1(i)
 end do
 !!!!!
 
@@ -637,12 +636,13 @@ By2=0
 do i=1,996
 	Ex2(:,i)=hx(i)*Ex(:,i)
 	By2(:,i)=hy(i)*By(:,i)
+	write(*,*) By2(2,i),Ex2(2,i)
 end do
 
 !write(14,*) By2
 
 !!!!!
-do n=1,10000
+do n=1,150000
 	t=t+dt
 	!By2(:,1)=by1(:)*tanh(t) 
 	!Jz(:,1)=jdrive(:)*tanh(t)
@@ -669,8 +669,8 @@ do n=1,10000
 			Ex2(i,k)=Ex2(i,k)-aaa1(k)*(By2(i,k)-By2(i,k-1))-bb1(k)*Ex2(i,k) ! no hx in second term because Ex2 has it already
 		end do
 	end do
-	if (mod(n,50).eq.0) then
-		write(14,fmt='(5g13.5)') t,Ex2(2,200),By2(2,200),Ez(2,200),Jz(2,200)!,Ex2(2,234),By2(2,234),Ex2(2,734),By2(2,734)
+	if (n.ge.125000.and.mod(n,20).eq.0) then
+		write(14,fmt='(5g13.5)') t,Ex2(2,200),By2(2,200),Ez(2,200),Jz(2,200)!,Ex2(2,967),By2(2,967),Ez(2,967),Jz(2,967)!,Ex2(2,234),By2(2,234),Ex2(2,734),By2(2,734)
 	end if 
 end do
 !!!!!
