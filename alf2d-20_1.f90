@@ -70,8 +70,8 @@ open (13,file='B field_1.txt')
 !open (3,file='gyrofreq_1.txt',status='new')
 !open (4,file='wavespeed_1.txt',status='new')
 !open (5,file='pedersen,parallel_conds_1.txt',status='new')
-open (14,file='fields1.txt',status='new')
-!open (15,file='coefficients.txt',status='new')
+!open (14,file='fields1.dat',status='new')
+open (15,file='coefficients.dat',status='new')
 
 do i=1,46
 	read (10,fmt='(2g13.5)') height(i),etemp(i)
@@ -602,9 +602,9 @@ bbb2=bbb1/hx/hy ! plot out these coefficients and look for discontinuities in fi
 cc1=dt*c5*rveden1
 abc1=dt/rvepspar1
 
-!do i=1,996
-!	write (15,fmt='(5g12.5)') i,bbb2(i),cc1(i),abc1(i),rvcfei1(i)
-!end do
+do i=1,996
+	write (15,fmt='(5g12.5)') i,bbb2(i),cc1(i),abc1(i),rvcfei1(i)
+end do
 !!!!!
 
 !!!!! Checking the Courant condition
@@ -646,7 +646,7 @@ By2=0
 do i=1,996
 	Ex2(:,i)=hx(i)*Ex(:,i)
 	By2(:,i)=hy(i)*By(:,i)
-	write(*,*) By2(2,i),Ex2(2,i)
+!	write(*,*) By2(2,i),Ex2(2,i)
 end do
 
 !write(14,*) By2
@@ -679,13 +679,13 @@ do n=1,100000
 			Ex2(i,k)=Ex2(i,k)-aaa1(k)*(By2(i,k)-By2(i,k-1))-bb1(k)*Ex2(i,k) ! no hx in second term because Ex2 has it already
 		end do
 	end do
-	if (mod(n,50).eq.0) then
-		write(14,fmt='(5g13.5)') t,Ex2(2,980),By2(2,980),Jz(2,980),Ez(2,980)!,Ez(2,967),Jz(2,967)!,Ex2(2,234),By2(2,234),Ex2(2,734),By2(2,734)
-	end if 
+!	if (mod(n,50).eq.0) then
+!		write(14,fmt='(5g13.5)') t,Ex2(2,980),By2(2,980),Jz(2,980),Ez(2,980)!,Ez(2,967),Jz(2,967)!,Ex2(2,234),By2(2,234),Ex2(2,734),By2(2,734)
+!	end if 
 end do
 !!!!!
 
-close(14)
-!close(15)
+!close(14)
+close(15)
 
 end program grid
