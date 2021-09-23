@@ -39,7 +39,7 @@ real(8),dimension(996) :: cfho_2,cfhh_2,cfhhe_2,cfho2_2,cfhno_2,cfhn_2
 real(8),dimension(996) :: cfno_2,cfnh_2,cfnhe_2,cfno2_2,cfnno_2,cfnn_2
 real(8),dimension(996) :: pfe1,pfo1,pfh1,pfhe1,pfo21,pfno1,pfn1,gye1,gyo1,gyh1,gyhe1,gyo21,gyno1,gyn1
 real(8),dimension(996) :: alpha1,speed1,va1,sigped2,cfei_2,sigpar1,epspar1,beta1,pedrev1,rveden1,rvcfei1,rva1
-real(8),dimension(996) :: aaa1,bb1,bbb1,abc1,cc1,bbb2,cour1,rvepspar1
+real(8),dimension(996) :: aaa1,bb1,bbb1,abc1,cc1,bbb2,cour1,rvepspar1,sigped_1
 real(8),dimension(12,996) :: Jz2,Ex2,By2,Ez2
 
 real(8),allocatable,dimension(:) :: cour,aaa,bb,cc,ex1,x,dentot,va,rva,jdrive,by1
@@ -70,8 +70,47 @@ open (13,file='B field_1.txt')
 !open (3,file='gyrofreq_1.txt',status='new')
 !open (4,file='wavespeed_1.txt',status='new')
 !open (5,file='pedersen,parallel_conds_1.txt',status='new')
-!open (14,file='fields1.dat',status='new')
-open (15,file='coefficients.dat',status='new')
+!open (6,file='sigpeds.dat',status='new')
+open (90,file='fields2_100.dat',status='new')
+open (91,file='fields2_200.dat',status='new')
+open (92,file='fields2_300.dat',status='new')
+open (93,file='fields2_400.dat',status='new')
+open (94,file='fields2_500.dat',status='new')
+open (95,file='fields2_600.dat',status='new')
+open (96,file='fields2_700.dat',status='new')
+open (97,file='fields2_800.dat',status='new')
+open (98,file='fields2_900.dat',status='new')
+open (99,file='fields2_980.dat',status='new')
+open (80,file='fields5_100.dat',status='new')
+open (81,file='fields5_200.dat',status='new')
+open (82,file='fields5_300.dat',status='new')
+open (83,file='fields5_400.dat',status='new')
+open (84,file='fields5_500.dat',status='new')
+open (85,file='fields5_600.dat',status='new')
+open (86,file='fields5_700.dat',status='new')
+open (87,file='fields5_800.dat',status='new')
+open (88,file='fields5_900.dat',status='new')
+open (89,file='fields5_980.dat',status='new')
+open (70,file='fields8_100.dat',status='new')
+open (71,file='fields8_200.dat',status='new')
+open (72,file='fields8_300.dat',status='new')
+open (73,file='fields8_400.dat',status='new')
+open (74,file='fields8_500.dat',status='new')
+open (75,file='fields8_600.dat',status='new')
+open (76,file='fields8_700.dat',status='new')
+open (77,file='fields8_800.dat',status='new')
+open (78,file='fields8_900.dat',status='new')
+open (79,file='fields8_980.dat',status='new')
+open (60,file='fields11_100.dat',status='new')
+open (61,file='fields11_200.dat',status='new')
+open (62,file='fields11_300.dat',status='new')
+open (63,file='fields11_400.dat',status='new')
+open (64,file='fields11_500.dat',status='new')
+open (65,file='fields11_600.dat',status='new')
+open (66,file='fields11_700.dat',status='new')
+open (67,file='fields11_800.dat',status='new')
+open (68,file='fields11_900.dat',status='new')
+open (69,file='fields11_980.dat',status='new')
 
 do i=1,46
 	read (10,fmt='(2g13.5)') height(i),etemp(i)
@@ -515,13 +554,7 @@ va1=1.0E-9*b2/sqrt(mu*dentot1)
 !!!!!
 
 !!!!!
-!do i=1,996
-!	write(14,*) i,va1(i),speed1(i),edens2(i),odens2(i),hdens2(i),ndens2(i),dentot1(i)
-!end do
-!!!!!
-
-!!!!!
-!sigped1=(c4/16)*odens2* &
+!sigped_1=(c4/16)*odens2* &
 !		  ((sqrt(cfoo_2)/(cfoo_2+gyo1))+(sqrt(cfn2o_2)/(cfn2o_2+gyo1))+(sqrt(cfo2o_2)/(cfo2o_2+gyo1))+ &
 !		  (sqrt(cfheo_2)/(cfheo_2+gyo1))+(sqrt(cfaro_2)/(cfaro_2+gyo1))+(sqrt(cfho_2)/(cfho_2+gyo1))+ &
 !		  (sqrt(cfno_2)/(cfno_2+gyo1))) + &
@@ -602,9 +635,10 @@ bbb2=bbb1/hx/hy ! plot out these coefficients and look for discontinuities in fi
 cc1=dt*c5*rveden1
 abc1=dt/rvepspar1
 
-do i=1,996
-	write (15,fmt='(5g12.5)') i,bbb2(i),cc1(i),abc1(i),rvcfei1(i)
-end do
+!do i=1,996
+!	write (6,fmt='(5g12.5)') i,sigped2(i),sigped_1(i)
+!end do
+!close(6)
 !!!!!
 
 !!!!! Checking the Courant condition
@@ -679,13 +713,90 @@ do n=1,100000
 			Ex2(i,k)=Ex2(i,k)-aaa1(k)*(By2(i,k)-By2(i,k-1))-bb1(k)*Ex2(i,k) ! no hx in second term because Ex2 has it already
 		end do
 	end do
-!	if (mod(n,50).eq.0) then
-!		write(14,fmt='(5g13.5)') t,Ex2(2,980),By2(2,980),Jz(2,980),Ez(2,980)!,Ez(2,967),Jz(2,967)!,Ex2(2,234),By2(2,234),Ex2(2,734),By2(2,734)
-!	end if 
+	if (mod(n,50).eq.0) then
+		write(90,fmt='(5g13.5)') t,Ex2(2,100),By2(2,100),Jz(2,100),Ez(2,100)
+		write(91,fmt='(5g13.5)') t,Ex2(2,200),By2(2,200),Jz(2,200),Ez(2,200)
+		write(92,fmt='(5g13.5)') t,Ex2(2,300),By2(2,300),Jz(2,300),Ez(2,300)
+		write(93,fmt='(5g13.5)') t,Ex2(2,400),By2(2,400),Jz(2,400),Ez(2,400)
+		write(94,fmt='(5g13.5)') t,Ex2(2,500),By2(2,500),Jz(2,500),Ez(2,500)
+		write(95,fmt='(5g13.5)') t,Ex2(2,600),By2(2,600),Jz(2,600),Ez(2,600)
+		write(96,fmt='(5g13.5)') t,Ex2(2,700),By2(2,700),Jz(2,700),Ez(2,700)
+		write(97,fmt='(5g13.5)') t,Ex2(2,800),By2(2,800),Jz(2,800),Ez(2,800)
+		write(98,fmt='(5g13.5)') t,Ex2(2,900),By2(2,900),Jz(2,900),Ez(2,900)
+		write(99,fmt='(5g13.5)') t,Ex2(2,980),By2(2,980),Jz(2,980),Ez(2,980)
+		write(80,fmt='(5g13.5)') t,Ex2(5,100),By2(5,100),Jz(5,100),Ez(5,100)
+		write(81,fmt='(5g13.5)') t,Ex2(5,200),By2(5,200),Jz(5,200),Ez(5,200)
+		write(82,fmt='(5g13.5)') t,Ex2(5,300),By2(5,300),Jz(5,300),Ez(5,300)
+		write(83,fmt='(5g13.5)') t,Ex2(5,400),By2(5,400),Jz(5,400),Ez(5,400)
+		write(84,fmt='(5g13.5)') t,Ex2(5,500),By2(5,500),Jz(5,500),Ez(5,500)
+		write(85,fmt='(5g13.5)') t,Ex2(5,600),By2(5,600),Jz(5,600),Ez(5,600)
+		write(86,fmt='(5g13.5)') t,Ex2(5,700),By2(5,700),Jz(5,700),Ez(5,700)
+		write(87,fmt='(5g13.5)') t,Ex2(5,800),By2(5,800),Jz(5,800),Ez(5,800)
+		write(88,fmt='(5g13.5)') t,Ex2(5,900),By2(5,900),Jz(5,900),Ez(5,900)
+		write(89,fmt='(5g13.5)') t,Ex2(5,980),By2(5,980),Jz(5,980),Ez(5,980)
+		write(70,fmt='(5g13.5)') t,Ex2(8,100),By2(8,100),Jz(8,100),Ez(8,100)
+		write(71,fmt='(5g13.5)') t,Ex2(8,200),By2(8,200),Jz(8,200),Ez(8,200)
+		write(72,fmt='(5g13.5)') t,Ex2(8,300),By2(8,300),Jz(8,300),Ez(8,300)
+		write(73,fmt='(5g13.5)') t,Ex2(8,400),By2(8,400),Jz(8,400),Ez(8,400)
+		write(74,fmt='(5g13.5)') t,Ex2(8,500),By2(8,500),Jz(8,500),Ez(8,500)
+		write(75,fmt='(5g13.5)') t,Ex2(8,600),By2(8,600),Jz(8,600),Ez(8,600)
+		write(76,fmt='(5g13.5)') t,Ex2(8,700),By2(8,700),Jz(8,700),Ez(8,700)
+		write(77,fmt='(5g13.5)') t,Ex2(8,800),By2(8,800),Jz(8,800),Ez(8,800)
+		write(78,fmt='(5g13.5)') t,Ex2(8,900),By2(8,900),Jz(8,900),Ez(8,900)
+		write(79,fmt='(5g13.5)') t,Ex2(8,980),By2(8,980),Jz(8,980),Ez(8,980)
+		write(60,fmt='(5g13.5)') t,Ex2(11,100),By2(11,100),Jz(11,100),Ez(11,100)
+		write(61,fmt='(5g13.5)') t,Ex2(11,200),By2(11,200),Jz(11,200),Ez(11,200)
+		write(62,fmt='(5g13.5)') t,Ex2(11,300),By2(11,300),Jz(11,300),Ez(11,300)
+		write(63,fmt='(5g13.5)') t,Ex2(11,400),By2(11,400),Jz(11,400),Ez(11,400)
+		write(64,fmt='(5g13.5)') t,Ex2(11,500),By2(11,500),Jz(11,500),Ez(11,500)
+		write(65,fmt='(5g13.5)') t,Ex2(11,600),By2(11,600),Jz(11,600),Ez(11,600)
+		write(66,fmt='(5g13.5)') t,Ex2(11,700),By2(11,700),Jz(11,700),Ez(11,700)
+		write(67,fmt='(5g13.5)') t,Ex2(11,800),By2(11,800),Jz(11,800),Ez(11,800)
+		write(68,fmt='(5g13.5)') t,Ex2(11,900),By2(11,900),Jz(11,900),Ez(11,900)
+		write(69,fmt='(5g13.5)') t,Ex2(11,980),By2(11,980),Jz(11,980),Ez(11,980)
+	end if
 end do
 !!!!!
 
-!close(14)
-close(15)
+close(90)
+close(91)
+close(92)
+close(93)
+close(94)
+close(95)
+close(96)
+close(97)
+close(98)
+close(99)
+close(80)
+close(81)
+close(82)
+close(83)
+close(84)
+close(85)
+close(86)
+close(87)
+close(88)
+close(89)
+close(70)
+close(71)
+close(72)
+close(73)
+close(74)
+close(75)
+close(76)
+close(77)
+close(78)
+close(79)
+close(60)
+close(61)
+close(62)
+close(63)
+close(64)
+close(65)
+close(66)
+close(67)
+close(68)
+close(69)
 
 end program grid

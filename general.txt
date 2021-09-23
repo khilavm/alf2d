@@ -88,3 +88,5 @@ Note: alpha1 and sigped1 profiles have been changed from directly following the 
 Update 20/09: in business till at least 100s. problem was with not taking the reversed parallel conductivity in the coefficients for the z-direction. that was probably causing issues.
 
 Tasks: run the code for the extreme conditions mentioned by Ian Mann and compare results; upload all results to github to avoid confusion later on; learn a proper plotting method like python or julia or whatever else to avoid mucking about on gnuplot or excel anymore
+
+Agenda 23/09: all fields printed out at intervals in x and z for 24/08/09. now on to 25/12/19.
