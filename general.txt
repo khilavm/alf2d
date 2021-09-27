@@ -94,3 +94,10 @@ Agenda 23/09: all fields printed out at intervals in x and z for 24/08/09. now o
 Update 24/09: all printed similarly for 25/12/19.
 
 Agenda 27/09: discuss orals stuff with Bob; further tasks to be done with the code
+
+jorge officially assigns the committee, john, lindsay, cindy, tom jones from "outside"
+
+fft is pretty simple in both IDL and python. do it to see which frequencies the resonant cavity favours. we are working at 1 Hz so expect to see that amplified.
+Due to the skin depth effect caused by the Pedersen conductivity, the wave can be expected to attenuate as it goes down the ionosphere. Plot and verify this.
+Once the frequencites have been found, drive the pulse with that frequency as a retest that the cavity indeed amplifies those instead of others.
+Drive the cavity with a pulse as mentioned in a comment on the code.
