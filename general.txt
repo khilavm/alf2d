@@ -101,3 +101,13 @@ fft is pretty simple in both IDL and python. do it to see which frequencies the 
 Due to the skin depth effect caused by the Pedersen conductivity, the wave can be expected to attenuate as it goes down the ionosphere. Plot and verify this.
 Once the frequencites have been found, drive the pulse with that frequency as a retest that the cavity indeed amplifies those instead of others.
 Drive the cavity with a pulse as mentioned in a comment on the code.
+
+Agenda 30/09: ask bob about opening flies using a loop as opposed to writing a hundred lines
+
+Agenda 04/10: work on fft; set up loop for problem addressed on 30/09; send out emails for setting up orals
+
+Tasks: look at magnitudes of the fft instead of real and imaginary parts; do a cross-correlation between ex and by to see for how long they are in or our of phase; plot ex and va*by vs time in one plot; look at 2013 paper
+we want to see the frequency at which the fft is of the maximum value. these are the frequencies favoured by the wave. so scale the axes properly, or do a log plot, to see what this frequency is.
+
+Tasks 05/10: the fft signal is peaking at zero frequency (with a mysterious blank region for small negative frequencies) even for fields deep inside the ionosphere, probably due to the tanh driving. 
+plot for more field locations and then drive with a cosine pulse to see if the peaking frequency changes.
