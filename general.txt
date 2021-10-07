@@ -111,3 +111,11 @@ we want to see the frequency at which the fft is of the maximum value. these are
 
 Tasks 05/10: the fft signal is peaking at zero frequency (with a mysterious blank region for small negative frequencies) even for fields deep inside the ionosphere, probably due to the tanh driving. 
 plot for more field locations and then drive with a cosine pulse to see if the peaking frequency changes.
+
+Tasks 06/10: print only the positive frequencies of the fft, because for a real function, the fourier transform of the negative arguments is equal to the ft of the complex conjugate of the positive arguments. we are taking the absolute values anyway so it doesn't matter.
+the horizontal like at the bottom of the fft is puzzling to bob too
+
+Agenda 11/10: using np.fft.fftshift the horizontal line was removed. it connected the first and last data points of the set. it plots the positive frequencies first and then the negative ones. fftshift plots data in its natural order
+after plotting just the positive frequency values of the ft, is it seen that the peak is at 1, something that was not clear in the previous full plots. there is some empty space after zero, then the plot begins.
+however, upon zooming into the previous plots, it is seen that the peak is at zero
+where is the actual peak? at Zero only. i was initially setting frequencies to be strictly positive. for a non-negative constraint it's the same as before.
