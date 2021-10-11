@@ -116,6 +116,15 @@ Tasks 06/10: print only the positive frequencies of the fft, because for a real 
 the horizontal like at the bottom of the fft is puzzling to bob too
 
 Agenda 11/10: using np.fft.fftshift the horizontal line was removed. it connected the first and last data points of the set. it plots the positive frequencies first and then the negative ones. fftshift plots data in its natural order
+
 after plotting just the positive frequency values of the ft, is it seen that the peak is at 1, something that was not clear in the previous full plots. there is some empty space after zero, then the plot begins.
+
 however, upon zooming into the previous plots, it is seen that the peak is at zero
+
 where is the actual peak? at Zero only. i was initially setting frequencies to be strictly positive. for a non-negative constraint it's the same as before.
+
+peaking at zero again after driving with a cosine pules for one time period of 1 Hz.
+for (2,100) ex, by and ez go through a half-time period wave, i.e., one crest, with ez roughly negative of both ex and by. only jz goes through one full wave.
+test this for fields in the ionospheric region to see if the fft is qualitatively different.
+
+Tasks: run fft at different locations to look for nodes and antinodes of fields (when the ocnductivity is high, E is zero and so there's a node for E and an antinode for B, but when the conductivity is low, current can't flow and so B is zero, giving an antinode for E); drive the outer loop for longer to see effects; time derivative of j is proportional to e, so half wave for e and full wave for j makes sense
