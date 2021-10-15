@@ -128,3 +128,6 @@ for (2,100) ex, by and ez go through a half-time period wave, i.e., one crest, w
 test this for fields in the ionospheric region to see if the fft is qualitatively different.
 
 Tasks: run fft at different locations to look for nodes and antinodes of fields (when the ocnductivity is high, E is zero and so there's a node for E and an antinode for B, but when the conductivity is low, current can't flow and so B is zero, giving an antinode for E); drive the outer loop for longer to see effects; time derivative of j is proportional to e, so half wave for e and full wave for j makes sense
+
+Agenda 15/10: frequency vs angular frequency while driving and how to make sene of the output frequency bins. 
+Bob uses frequency, so (2*pi*t) as that's the standard way most people do it.
