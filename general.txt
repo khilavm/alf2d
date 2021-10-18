@@ -133,3 +133,7 @@ Agenda 15/10: frequency vs angular frequency while driving and how to make sene 
 Bob uses frequency, so (2*pi*t) as that's the standard way most people do it.
 
 Agenda 16/10: majmu008 not added to sudoers file in putty. fine for vim because i added my own vimrc file and changed some settings but it looks like I need it for an x11 forwarding error while running python codes on msi.
+
+Agenda 18/10: x11 forwarding error resolved through Joe's help. used mpl.use('agg'). agg is a backend (https://gist.github.com/CMCDragonkai/4e9464d9f32f5893d837f3de2c43daa4) which is not required in Jupyter notebooks but is used when interfacing between linux and windows, especially when rendering pngs.
+
+Lucas notes: paraview for 3d printing. refactorise code as much as possible (make it modular, write functions to avoid writing many similar lines), hdf5 might be too complicated for now in fortran so might look at it for python. write file unit numbers and other identifiers to arrays and use them in nested for loops to open and close files.
