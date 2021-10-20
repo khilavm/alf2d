@@ -137,3 +137,5 @@ Agenda 16/10: majmu008 not added to sudoers file in putty. fine for vim because 
 Agenda 18/10: x11 forwarding error resolved through Joe's help. used mpl.use('agg'). agg is a backend (https://gist.github.com/CMCDragonkai/4e9464d9f32f5893d837f3de2c43daa4) which is not required in Jupyter notebooks but is used when interfacing between linux and windows, especially when rendering pngs.
 
 Lucas notes: paraview for 3d printing. refactorise code as much as possible (make it modular, write functions to avoid writing many similar lines), hdf5 might be too complicated for now in fortran so might look at it for python. write file unit numbers and other identifiers to arrays and use them in nested for loops to open and close files.
+
+Agenda 19/10: Bob suggests a checking scheme for the frequencies spat out by the fft code. Use the shooting method (pretty standard in the field) by writing maxwell's equations in frequency space and performing some kind of integrations. Look at the paper that Bob sends for this.
