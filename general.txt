@@ -136,6 +136,12 @@ Agenda 16/10: majmu008 not added to sudoers file in putty. fine for vim because 
 
 Agenda 18/10: x11 forwarding error resolved through Joe's help. used mpl.use('agg'). agg is a backend (https://gist.github.com/CMCDragonkai/4e9464d9f32f5893d837f3de2c43daa4) which is not required in Jupyter notebooks but is used when interfacing between linux and windows, especially when rendering pngs.
 
-Lucas notes: paraview for 3d printing. refactorise code as much as possible (make it modular, write functions to avoid writing many similar lines), hdf5 might be too complicated for now in fortran so might look at it for python. write file unit numbers and other identifiers to arrays and use them in nested for loops to open and close files.
+Lucas notes: paraview for 3d plotting. refactorise code as much as possible (make it modular, write functions to avoid writing many similar lines), hdf5 might be too complicated for now in fortran so might look at it for python. write file unit numbers and other identifiers to arrays and use them in nested for loops to open and close files.
 
 Agenda 19/10: Bob suggests a checking scheme for the frequencies spat out by the fft code. Use the shooting method (pretty standard in the field) by writing maxwell's equations in frequency space and performing some kind of integrations. Look at the paper that Bob sends for this.
+
+Agenda 26/10: Start shooting method by imporing the bottom boundary conditions first, integrate rk4 until the top and then impose the condition of whether the wave flies away or reflects.
+
+Agenda 01/11: Proton gyrofreq is around 0.5 Hz, electron's is much higher. Inquire about validity of timestep in view of these numbers.
+
+After meeting Bob: the timestep doesn't matter too much but it's actually the rate at which things are evolving that does. this is captured by the wavespeed. for the "complex" rk4 integration of the wave equations, define one of Ex and By to be i*Ex or i*By. fortran will recognise the quantity as required and integrate. at the end, because we know we have real quantities, a bisection method of finding the roots is suggested as opposed to Newton-Raphson.
