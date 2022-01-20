@@ -145,3 +145,13 @@ Agenda 26/10: Start shooting method by imporing the bottom boundary conditions f
 Agenda 01/11: Proton gyrofreq is around 0.5 Hz, electron's is much higher. Inquire about validity of timestep in view of these numbers.
 
 After meeting Bob: the timestep doesn't matter too much but it's actually the rate at which things are evolving that does. this is captured by the wavespeed. for the "complex" rk4 integration of the wave equations, define one of Ex and By to be i*Ex or i*By. fortran will recognise the quantity as required and integrate. at the end, because we know we have real quantities, a bisection method of finding the roots is suggested as opposed to Newton-Raphson.
+
+Agenda 14/01/22: 
+
+in spherical coordinates description file, what is r_trans?
+need to include parallel electric field equations
+parallelisation procedure
+poles part (eq 16)
+eq 11 and 12, why the exponential factor
+
+(check files sent by RL and notes in the Word document for answers)
